@@ -91,15 +91,15 @@ scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cer
 ```
 ### 3. Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
         - `nginx/conf.d/mattermost.conf`
-        ```bash
-        vi nginx/conf.d/mattermost.conf
-        # <or>
-        nano nginx/conf.d/mattermost.conf
-        ```
+```bash
+vi nginx/conf.d/mattermost.conf
+# <or>
+nano nginx/conf.d/mattermost.conf
+```
         - `docker-compose.yml`
-        ```
-        - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
-        ```
+```bash
+- MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
+```
 ### 4. Customize the Database password in the `docker-compose.yml` file.
 ```bash
 - POSTGRES_PASSWORD=VeryStrongPassword123!
