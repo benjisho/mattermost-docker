@@ -21,7 +21,7 @@ services:
       - TZ=UTC
       - MM_SQLSETTINGS_DRIVERNAME=postgres
       - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
-      - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
+      - MM_SERVICESETTINGS_SITEURL=https://64.176.212.235
     volumes:
       - ./volumes/app/mattermost/config:/mattermost/config:rw
       - ./volumes/app/mattermost/data:/mattermost/data:rw
@@ -35,11 +35,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./volumes/web/cert/cert.pem:/cert.crt:ro
-      - ./volumes/web/cert/key-no-password.pem:/key.key:ro
-      - ./volumes/web/cert/cert.crt:/cert.crt:ro
-      - ./volumes/web/cert/key.key:/key.key:ro
-
+      - ./volumes/web/cert/cert.pem:/etc/nginx/certs/cert.crt:ro
+      - ./volumes/web/cert/key.pem:/etc/nginx/certs/key.key:ro
     ports:
       - "80:80"
       - "443:443"
