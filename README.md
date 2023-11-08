@@ -59,3 +59,10 @@ scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cer
 ```bash
 docker-compose up -d
 ```
+
+4. Give permissions
+```
+chmod -R 777 ./volumes/app/mattermost/config
+chmod -R 777 ./volumes/app/mattermost/logs
+chmod -R 777 ./volumes/app/mattermost/data
+```
