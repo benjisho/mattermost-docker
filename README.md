@@ -90,16 +90,21 @@ openssl x509 -req -days 365 -in ${PWD}/volumes/web/cert/cert.csr -signkey ${PWD}
 scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cert/
 ```
 ### 3. Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
+
         - `nginx/conf.d/mattermost.conf`
+
 ```bash
 vi nginx/conf.d/mattermost.conf
 # <or>
 nano nginx/conf.d/mattermost.conf
 ```
+
         - `docker-compose.yml`
+
 ```bash
 - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
 ```
+
 ### 4. Customize the Database password in the `docker-compose.yml` file.
 ```bash
 - POSTGRES_PASSWORD=VeryStrongPassword123!
