@@ -1,5 +1,22 @@
 # mattermost-docker
 
+- [Introduction](#introduction)
+- [File Structure](#file-structure)
+- [Setup Instructions](#setup-instructions)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. SSL Certificate Generation](#2-ssl-certificate-generation)
+    - [2.1. Self-Signed SSL Certificate](#21-self-signed-ssl-certificate)
+    - [2.2. Valid SSL Certificate](#22-valid-ssl-certificate)
+  - [3. Domain Configuration](#3-domain-configuration)
+  - [4. Starting the Service](#4-starting-the-service)
+  - [5. Set Permissions](#5-set-permissions)
+- [Configuration Details](#configuration-details)
+- [Using the Mattermost Service](#using-the-mattermost-service)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact Information](#contact-information)
+
 ## File structure:
 ```bash
 /mattermost-docker
