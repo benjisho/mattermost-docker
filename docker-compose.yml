@@ -1,0 +1,49 @@
+version: "2.4"
+
+services:
+  postgres:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+      - POSTGRES_USER=mmuser
+      - POSTGRES_PASSWORD=VeryStrongPassword123!
+      - POSTGRES_DB=mattermost
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data
+
+  mattermost:
+    depends_on:
+      - postgres
+    image: mattermost/mattermost-enterprise:9.1.2
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+      - MM_SQLSETTINGS_DRIVERNAME=postgres
+      - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
+      - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
+    volumes:
+      - ./volumes/app/mattermost/config:/mattermost/config:rw
+      - ./volumes/app/mattermost/data:/mattermost/data:rw
+      - ./volumes/app/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/app/mattermost/client/plugins:/mattermost/client/plugins:rw
+      - ./volumes/app/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./volumes/web/cert/cert.pem:/cert.crt:ro
+      - ./volumes/web/cert/key-no-password.pem:/key.key:ro
+      - ./volumes/web/cert/cert.crt:/cert.crt:ro
+      - ./volumes/web/cert/key.key:/key.key:ro
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+networks:
+  default:
+    name: mattermost
