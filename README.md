@@ -91,7 +91,7 @@ scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cer
 ```
 ### 3. Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
 
-        - `nginx/conf.d/mattermost.conf`
+        - nginx/conf.d/mattermost.conf
 
 ```bash
 vi nginx/conf.d/mattermost.conf
@@ -99,7 +99,7 @@ vi nginx/conf.d/mattermost.conf
 nano nginx/conf.d/mattermost.conf
 ```
 
-        - `docker-compose.yml`
+        - docker-compose.yml
 
 ```bash
 - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
