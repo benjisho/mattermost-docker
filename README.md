@@ -42,6 +42,7 @@ Let's get your Mattermost server rolling!
 ├── .env
 ├── nginx
 │   └── conf.d
+│       └── mattermost.conf
 └── volumes
     ├── app
     │   └── mattermost
