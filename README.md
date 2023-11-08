@@ -55,12 +55,16 @@ openssl x509 -req -days 365 -in ${PWD}/volumes/web/cert/cert.csr -signkey ${PWD}
 scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cert/
 ```
 
-3. Runthe following command to start your service:
+3. Replace `yourdomain.com` with your Mattermost server FQDM in the following file:
+```
+nginx/conf.d/mattermost.conf
+```
+4. Runthe following command to start your service:
 ```bash
 docker-compose up -d
 ```
 
-4. Give permissions
+5. Give permissions
 ```
 chmod -R 777 ./volumes/app/mattermost/config
 chmod -R 777 ./volumes/app/mattermost/logs
