@@ -15,7 +15,7 @@ services:
   mattermost:
     depends_on:
       - postgres
-    image: mattermost/mattermost-enterprise:9.1.2
+    image: mattermost/mattermost-enterprise-edition
     restart: unless-stopped
     environment:
       - TZ=UTC
