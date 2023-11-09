@@ -105,7 +105,7 @@ nano nginx/conf.d/mattermost.conf
 ```bash
 - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
 ```
-> Uncomment Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
+> Uncomment Enterprise Edition to use licensed version `image: mattermost/mattermost-enterprise-edition`
 ### 4. Customize the Database password
 Customize the Postgres database password in the `docker-compose.yml` file.
 ```bash
