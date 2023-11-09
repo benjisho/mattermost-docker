@@ -11,8 +11,8 @@
      - [2.2. Option 2 - Valid SSL Certificate](#22-Option-2---valid-ssl-certificate)
    - [3. Domain Configuration](#3-domain-configuration)
    - [4. Customize the Database password](#4-customize-the-database-password)
-   - [5. Starting Mattermost Service](#5-starting-mattermost-service)
-   - [6. Set Permissions](#6-set-permissions)
+   - [5. Set Permissions](#5-set-permissions)
+   - [6. Starting Mattermost Service](#6-starting-mattermost-service)
 4. [Contributing](#contributing)
 5. [License](#license)
 
@@ -114,17 +114,19 @@ Customize the Postgres database password in the `docker-compose.yml` file.
 - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
 ```
         > unfortunately environment variables do not work here.
-### 5. Starting Mattermost Service
-Run the following command to start your service:
-```bash
-docker-compose up -d
-```
-### 6. Set Permissions
+
+### 5. Set Permissions
 Give permissions to the volumes.
 ```
 chmod -R 777 ./volumes/app/mattermost/config
 chmod -R 777 ./volumes/app/mattermost/logs
 chmod -R 777 ./volumes/app/mattermost/data
+```
+
+### 6. Starting Mattermost Service
+Run the following command to start your service:
+```bash
+docker-compose up -d
 ```
 
 ## Contributing
