@@ -2,50 +2,69 @@ version: "3.7"
 
 services:
   postgres:
-    image: postgres:13
-    restart: unless-stopped
+    image: postgres:${POSTGRES_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    deploy:
+      resources:
+        limits:
+          cpus: ${POSTGRES_CPU_LIMIT}
+          memory: ${POSTGRES_MEMORY_LIMIT}
     environment:
-      - TZ=UTC
-      - POSTGRES_USER=mmuser
-      - POSTGRES_PASSWORD=VeryStrongPassword123!
-      - POSTGRES_DB=mattermost
+      # timezone inside container
+      - TZ
+      # necessary Postgres options/variables
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     volumes:
-      - ./volumes/db:/var/lib/postgresql/data
+      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
 
   mattermost:
     depends_on:
       - postgres
-    # For personal use, you can use `image: mattermost/mattermost-team-edition`
-    image: mattermost/mattermost-team-edition
-    # For Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
-    # image: mattermost/mattermost-enterprise-edition
-    restart: unless-stopped
+    image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
+    deploy:
+      resources:
+        limits:
+          cpus: ${MATTERMOST_CPU_LIMIT}
+          memory: ${MATTERMOST_MEMORY_LIMIT}
     environment:
-      - TZ=UTC
-      - MM_SQLSETTINGS_DRIVERNAME=postgres
-      - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
-      - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
+      # timezone inside container
+      - TZ
+      # necessary Mattermost options/variables (see env.example)
+      - MM_SQLSETTINGS_DRIVERNAME
+      - MM_SQLSETTINGS_DATASOURCE
+      # necessary for bleve
+      - MM_BLEVESETTINGS_INDEXDIR
+      # additional settings
+      - MM_SERVICESETTINGS_SITEURL
     volumes:
-      - ./volumes/app/mattermost/config:/mattermost/config:rw
-      - ./volumes/app/mattermost/data:/mattermost/data:rw
-      - ./volumes/app/mattermost/logs:/mattermost/logs:rw
-      - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
-      - ./volumes/app/mattermost/client/plugins:/mattermost/client/plugins:rw
-      - ./volumes/app/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
+      - ${MATTERMOST_CONFIG_PATH}:/mattermost/config:rw
+      - ${MATTERMOST_DATA_PATH}:/mattermost/data:rw
+      - ${MATTERMOST_LOGS_PATH}:/mattermost/logs:rw
+      - ${MATTERMOST_PLUGINS_PATH}:/mattermost/plugins:rw
+      - ${MATTERMOST_CLIENT_PLUGINS_PATH}:/mattermost/client/plugins:rw
+      - ${MATTERMOST_BLEVE_INDEXES_PATH}:/mattermost/bleve-indexes:rw
+      # When you want to use SSO with GitLab, you have to add the cert pki chain of GitLab inside Alpine
+      # to avoid Token request failed: certificate signed by unknown authority 
+      # (link: https://github.com/mattermost/mattermost-server/issues/13059 and https://github.com/mattermost/docker/issues/34)
+      # - ${GITLAB_PKI_CHAIN_PATH}:/etc/ssl/certs/pki_chain.pem:ro
+
       # Uncomment if using Enterprise Edition with a license
       # - ./volumes/app/mattermost/license:/mattermost/license:rw
       # <or>
       # - ./volumes/app/mattermost/secrets/mattermost-license.txt:/mattermost/config/mattermost-license.txt:ro
   nginx:
-    image: nginx:alpine
-    restart: unless-stopped
+    image: nginx:${NGINX_IMAGE_TAG}
+    restart: ${RESTART_POLICY}
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./volumes/web/cert/cert.crt:/etc/nginx/certs/cert.crt:ro
-      - ./volumes/web/cert/key.key:/etc/nginx/certs/key.key:ro
+      - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d:ro
+      - ${CERT_PATH}:/cert.pem:ro
+      - ${KEY_PATH}:/key.pem:ro
     ports:
-      - "80:80"
-      - "443:443"
+      - ${HTTPS_PORT}:443
+      - ${HTTP_PORT}:80
 
 networks:
   default:
