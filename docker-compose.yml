@@ -1,4 +1,4 @@
-version: "2.4"
+version: "3.7"
 
 services:
   postgres:
@@ -29,7 +29,10 @@ services:
       - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/app/mattermost/client/plugins:/mattermost/client/plugins:rw
       - ./volumes/app/mattermost/bleve-indexes:/mattermost/bleve-indexes:rw
-
+      # Uncomment if using Enterprise Edition with a license
+      # - ./volumes/app/mattermost/license:/mattermost/license:rw
+      # <or>
+      # - ./volumes/app/mattermost/secrets/mattermost-license.txt:/mattermost/config/mattermost-license.txt:ro
   nginx:
     image: nginx:alpine
     restart: unless-stopped
