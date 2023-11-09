@@ -15,7 +15,10 @@ services:
   mattermost:
     depends_on:
       - postgres
-    image: mattermost/mattermost-enterprise-edition
+    # For personal use, you can use `image: mattermost/mattermost-team-edition`
+    image: mattermost/mattermost-team-edition
+    # For Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
+    # image: mattermost/mattermost-enterprise-edition
     restart: unless-stopped
     environment:
       - TZ=UTC
