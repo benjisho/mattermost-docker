@@ -7,16 +7,14 @@
 3. [Setup Instructions](#setup-instructions)
    - [1. Clone the Repository](#1-clone-the-repository)
    - [2. SSL Certificate Generation](#2-ssl-certificate-generation)
-     - [2.1. Self-Signed SSL Certificate](#21-self-signed-ssl-certificate)
-     - [2.2. Valid SSL Certificate](#22-valid-ssl-certificate)
+     - [2.1. Option 1 - Self-Signed SSL Certificate](#21-option-1---self-signed-ssl-certificate)
+     - [2.2. Option 2 - Valid SSL Certificate](#22-Option-2---valid-ssl-certificate)
    - [3. Domain Configuration](#3-domain-configuration)
-   - [4. Starting the Service](#4-starting-the-service)
-   - [5. Set Permissions](#5-set-permissions)
-4. [Configuration Details](#configuration-details)
-5. [Using the Mattermost Service](#using-the-mattermost-service)
-6. [Troubleshooting](#troubleshooting)
-7. [Contributing](#contributing)
-8. [License](#license)
+   - [4. Customize the Database password](#4-customize-the-database-password)
+   - [5. Starting Mattermost Service](#5-starting-mattermost-service)
+   - [6. Set Permissions](#6-set-permissions)
+4. [Contributing](#contributing)
+5. [License](#license)
 
 ## Introduction
 
@@ -35,7 +33,7 @@ We encourage you to read through the documentation to understand how to configur
 
 Let's get your Mattermost server rolling!
 
-## File structure:
+## File structure
 ```bash
 /mattermost-docker
 ├── docker-compose.yml
@@ -70,9 +68,11 @@ git clone https://github.com/benjisho/mattermost-docker.git
 cd mattermost-docker
 ```
 
-### 2. Generate SSL certificate into `${PWD}/volumes/web/cert/` directory
+### 2. 2. SSL Certificate Generation
+Generate SSL certificate into `${PWD}/volumes/web/cert/` directory
 
-#### 2.1. Option 1 - Generate a self signed SSL certificate into `certs/` directory
+#### 2.1. Option 1 - Self-Signed SSL Certificate
+Option 1 - Generate a self signed SSL certificate into `certs/` directory
 Run the following command to generate a 2048-bit RSA private key, which is used to decrypt traffic:
 ```bash
 openssl genrsa -out ${PWD}/volumes/web/cert/key.key 2048
@@ -89,7 +89,8 @@ openssl x509 -req -days 365 -in ${PWD}/volumes/web/cert/cert.csr -signkey ${PWD}
 ```bash
 scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cert/
 ```
-### 3. Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
+### 3. Domain Configuration
+Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
 
 - nginx/conf.d/mattermost.conf
 
@@ -105,18 +106,21 @@ nano nginx/conf.d/mattermost.conf
 - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
 ```
 
-### 4. Customize the Database password in the `docker-compose.yml` file.
+### 4. Customize the Database password
+Customize the Postgres database password in the `docker-compose.yml` file.
 ```bash
 - POSTGRES_PASSWORD=VeryStrongPassword123!
 # <and also this line>
 - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
 ```
         > unfortunately environment variables do not work here.
-### 5. Run the following command to start your service:
+### 5. Starting Mattermost Service
+Run the following command to start your service:
 ```bash
 docker-compose up -d
 ```
-### 6. Give permissions to the volumes.
+### 6. Set Permissions
+Give permissions to the volumes.
 ```
 chmod -R 777 ./volumes/app/mattermost/config
 chmod -R 777 ./volumes/app/mattermost/logs
