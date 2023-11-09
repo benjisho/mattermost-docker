@@ -5,14 +5,17 @@
 1. [Introduction](#introduction)
 2. [File Structure](#file-structure)
 3. [Setup Instructions](#setup-instructions)
-   - [1. Clone the Repository](#1-clone-the-repository)
-   - [2. SSL Certificate Generation](#2-ssl-certificate-generation)
-     - [2.1. Option 1 - Self-Signed SSL Certificate](#21-option-1---self-signed-ssl-certificate)
-     - [2.2. Option 2 - Valid SSL Certificate](#22-Option-2---valid-ssl-certificate)
-   - [3. Domain Configuration](#3-domain-configuration)
-   - [4. Customize the Database password](#4-customize-the-database-password)
-   - [5. Set Permissions](#5-set-permissions)
-   - [6. Starting Mattermost Service](#6-starting-mattermost-service)
+    - 3.1. [Clone the Repository](#1-clone-the-repository)
+    - 3.2. [SSL Certificate Generation](#2-ssl-certificate-generation)
+        - 3.2.1. [Self-Signed SSL Certificate](#21-option-1---self-signed-ssl-certificate)
+        - 3.2.2. [Valid SSL Certificate](#22-option-2---generate-a-valid-certificate)
+    - 3.3. [Domain Configuration](#3-domain-configuration)
+    - 3.4. [Customize Parameters in `.env`](#4-customize-parameters-in-env)
+        - 3.4.1. [Database Credentials](#customize-the-database-credentials)
+        - 3.4.2. [Mattermost Resource Limits](#customizeuncomment-the-mattermost-resource-limits)
+        - 3.4.3. [Mattermost Image and Tag](#customizeuncomment-the-mattermost)
+    - 3.5. [Starting Mattermost Service](#5-starting-mattermost-service)
+    - 3.6. [Set Permissions](#6-set-permissions)
 4. [Contributing](#contributing)
 5. [License](#license)
 
@@ -62,16 +65,16 @@ Let's get your Mattermost server rolling!
 
 ## Setup Instructions
 
-### 1. Clone the repository:
+### Clone the repository
 ```bash
 git clone https://github.com/benjisho/mattermost-docker.git
 cd mattermost-docker
 ```
 
-### 2. 2. SSL Certificate Generation
+### SSL Certificate Generation
 Generate SSL certificate into `${PWD}/volumes/web/cert/` directory
 
-#### 2.1. Option 1 - Self-Signed SSL Certificate
+#### Option 1 - Self-Signed SSL Certificate
 Option 1 - Generate a self signed SSL certificate into `certs/` directory
 Run the following command to generate a 2048-bit RSA private key, which is used to decrypt traffic:
 ```bash
@@ -85,14 +88,14 @@ Run the following command to self-sign the certificate with the private key, for
 ```bash
 openssl x509 -req -days 365 -in ${PWD}/volumes/web/cert/cert.csr -signkey ${PWD}/volumes/web/cert/key.key -out ${PWD}/volumes/web/cert/cert.crt
 ```
-#### 2.2. Option 2 - Generate a valid certificate
+#### Option 2 - Generate a valid certificate
 ```bash
 scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cert/
 ```
-### 3. Domain Configuration
+### Domain Configuration
 Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
 
-- nginx/conf.d/mattermost.conf
+- In file `nginx/conf.d/mattermost.conf`
 
 ```bash
 vi nginx/conf.d/mattermost.conf
@@ -100,22 +103,46 @@ vi nginx/conf.d/mattermost.conf
 nano nginx/conf.d/mattermost.conf
 ```
 
-- docker-compose.yml
+- In file `.env`
 
 ```bash
-- MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
+DOMAIN=mm.example.com
 ```
-> Uncomment Enterprise Edition to use licensed version `image: mattermost/mattermost-enterprise-edition`
-### 4. Customize the Database password
-Customize the Postgres database password in the `docker-compose.yml` file.
-```bash
-- POSTGRES_PASSWORD=VeryStrongPassword123!
-# <and also this line>
-- MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
-```
-  > unfortunately environment variables do not work here.
 
-### 5. Set Permissions
+### Customize parameters in `.env`
+#### Customize the Database Credentials
+Customize the Postgres database credentials in the `.env` file.
+```bash
+POSTGRES_USER=mmuser
+POSTGRES_PASSWORD=mmuser_password
+POSTGRES_DB=mattermost
+```
+#### Customize/Uncomment the Mattermost Resource Limits
+```bash
+MATTERMOST_CPU_LIMIT=2
+MATTERMOST_MEMORY_LIMIT=4g
+```
+>  Minimum recommended configuration options for Mattermost 250-500 users are `2 cpu` and `4g memory`
+>Minimum recommended configuration options for Mattermost 500-1000 users are `2 cpu` and `8g memory`
+>Minimum recommended configuration options for Mattermost 1000-2000 users are `4 cpu` and `16g memory`
+>Minimum recommended configuration options for Mattermost 2000-4000 users are `8 cpu` and `32g memory`
+
+#### Customize/Uncomment the Mattermost 
+```bash
+MATTERMOST_IMAGE=mattermost-enterprise-edition
+MATTERMOST_IMAGE_TAG=9.1.2
+```
+>For personal use, you can use `image: mattermost/mattermost-team-edition`
+>`MATTERMOST_IMAGE=mattermost/mattermost-team-edition`
+>For Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
+
+### Starting Mattermost Service
+Run the following command to start your service:
+```bash
+docker-compose up -d
+```
+
+### Set Permissions
 Give permissions to the volumes.
 ```
 chmod -R 777 ./volumes/app/mattermost/config
@@ -123,14 +150,8 @@ chmod -R 777 ./volumes/app/mattermost/logs
 chmod -R 777 ./volumes/app/mattermost/data
 ```
 
-### 6. Starting Mattermost Service
-Run the following command to start your service:
-```bash
-docker-compose up -d
-```
-
 ## Contributing
 Contributions are welcome! Please read the contributing guidelines before getting started.
-
+- Page is based on information provided in the [Official Mattermost Docker Repository](https://github.com/mattermost/docker)
 ## License
 GNU License
