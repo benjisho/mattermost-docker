@@ -105,7 +105,7 @@ nano nginx/conf.d/mattermost.conf
 ```bash
 - MM_SERVICESETTINGS_SITEURL=https://yourdomain.com
 ```
-
+> Uncomment Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
 ### 4. Customize the Database password
 Customize the Postgres database password in the `docker-compose.yml` file.
 ```bash
@@ -113,7 +113,7 @@ Customize the Postgres database password in the `docker-compose.yml` file.
 # <and also this line>
 - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:VeryStrongPassword123!@postgres:5432/mattermost?sslmode=disable&connect_timeout=10
 ```
-        > unfortunately environment variables do not work here.
+  > unfortunately environment variables do not work here.
 
 ### 5. Set Permissions
 Give permissions to the volumes.
