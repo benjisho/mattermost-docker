@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Example
+# ./issue-certificate.sh -d www.example.com -o "$(pwd)/../volumes/web/cert/"
+
 usage() {
   cat <<EOF
 Usage: $0 [-h] <-d DOMAIN> <-o PATH>
