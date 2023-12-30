@@ -13,6 +13,11 @@ services:
         limits:
           cpus: ${POSTGRES_CPU_LIMIT}
           memory: ${POSTGRES_MEMORY_LIMIT}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
     environment:
       # timezone inside container
       - TZ
@@ -69,6 +74,8 @@ services:
       # - ./volumes/app/mattermost/secrets/mattermost-license.txt:/mattermost/config/mattermost-license.txt:ro
     
   nginx:
+    depends_on:
+      - mattermost
     image: nginx:${NGINX_IMAGE_TAG}
     restart: ${RESTART_POLICY}
     pids_limit: 100
@@ -80,6 +87,11 @@ services:
         limits:
           cpus: ${NGINX_CPU_LIMIT}
           memory: ${NGINX_MEMORY_LIMIT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${HTTP_PORT}/"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
     volumes:
       - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d:ro
       - ${CERT_PATH}:/cert.pem:ro
