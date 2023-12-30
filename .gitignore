@@ -1,0 +1,8 @@
+# Docker volumes
+volumes/
+
+# Environment files
+.env
+*.env.local
+*.env.development
+*.env.production
