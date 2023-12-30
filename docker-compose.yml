@@ -4,6 +4,9 @@ services:
   postgres:
     image: postgres:${POSTGRES_IMAGE_TAG}
     restart: ${RESTART_POLICY}
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
     pids_limit: 100
     deploy:
       resources:
@@ -26,6 +29,8 @@ services:
     image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
     restart: ${RESTART_POLICY}
     pids_limit: 200
+    tmpfs:
+      - /tmp
     deploy:
       resources:
         limits:
@@ -61,6 +66,14 @@ services:
     image: nginx:${NGINX_IMAGE_TAG}
     restart: ${RESTART_POLICY}
     pids_limit: 100
+    tmpfs:
+      - /var/run
+      - /var/log/nginx
+    deploy:
+      resources:
+        limits:
+          cpus: ${NGINX_CPU_LIMIT}
+          memory: ${NGINX_MEMORY_LIMIT}
     volumes:
       - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d:ro
       - ${CERT_PATH}:/cert.pem:ro
