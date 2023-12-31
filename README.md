@@ -65,16 +65,16 @@ Let's get your Mattermost server rolling!
 
 ## Setup Instructions
 
-### Clone the repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/benjisho/mattermost-docker.git
 cd mattermost-docker
 ```
 
-### SSL Certificate Generation
+### 2. SSL Certificate Generation
 Generate SSL certificate into `${PWD}/volumes/web/cert/` directory
 
-#### Option 1 - Self-Signed SSL Certificate
+#### 2.1. Option 1 - Self-Signed SSL Certificate
 Option 1 - Generate a self signed SSL certificate into `certs/` directory
 Run the following command to generate a 2048-bit RSA private key, which is used to decrypt traffic:
 ```bash
@@ -88,11 +88,11 @@ Run the following command to self-sign the certificate with the private key, for
 ```bash
 openssl x509 -req -days 365 -in ${PWD}/volumes/web/cert/cert.csr -signkey ${PWD}/volumes/web/cert/key.key -out ${PWD}/volumes/web/cert/cert.crt
 ```
-#### Option 2 - Generate a valid certificate
+#### 2.2. Option 2 - Generate a valid certificate
 ```bash
 scripts/issue-certificate.sh -d <your.domain.name.com> -o ${PWD}/volumes/web/cert/
 ```
-### Domain Configuration
+### 3. Domain Configuration
 Replace `yourdomain.com` with your Mattermost server FQDM in the following files:
 
 - In file `nginx/conf.d/mattermost.conf`
@@ -109,7 +109,7 @@ nano nginx/conf.d/mattermost.conf
 DOMAIN=mm.example.com
 ```
 
-### Customize parameters in `.env`
+### 4. Customize parameters in `.env`
 #### Customize the Database Credentials
 Customize the Postgres database credentials in the `.env` file.
 ```bash
@@ -136,13 +136,13 @@ MATTERMOST_IMAGE_TAG=9.1.2
 >`MATTERMOST_IMAGE=mattermost/mattermost-team-edition`
 >For Enterprise Edition use `image: mattermost/mattermost-enterprise-edition`
 
-### Starting Mattermost Service
+### 5. Starting Mattermost Service
 Run the following command to start your service:
 ```bash
 docker-compose up -d
 ```
 
-### Set Permissions
+### 6. Set Permissions
 Give permissions to the volumes.
 ```
 chmod -R 777 ./volumes/app/mattermost/config
