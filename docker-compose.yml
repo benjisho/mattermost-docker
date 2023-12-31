@@ -27,8 +27,6 @@ services:
       - POSTGRES_DB
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
-      - ${POSTGRES_LOGS_PATH}:/var/log/postgresql
-      - ${POSTGRES_CONFIG_PATH}:/etc/postgresql
     ports:
       - ${POSTGRES_PORT}:5432
 
@@ -98,11 +96,12 @@ services:
       retries: 3
     volumes:
       - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d:ro
-      - ${CERT_PATH}:/cert.pem:ro
-      - ${KEY_PATH}:/key.pem:ro
+      - ${CERT_PATH}:/etc/nginx/certs/cert.crt:ro
+      - ${KEY_PATH}:/etc/nginx/certs/key.key:ro
     ports:
       - ${HTTPS_PORT}:443
       - ${HTTP_PORT}:80
+      - ${CALLS_PORT}:8443
 
 networks:
   default:
