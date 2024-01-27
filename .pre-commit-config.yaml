@@ -58,4 +58,7 @@ ci:
 # cd /repo
 # pre-commit run --all-files
 # git status
-# copy the files with the diffs
+# copy the files with the diffs.
+
+# Or Just:
+# docker pull python:3.9 && docker run -it --rm -v "$(pwd)":/repo python:3.9 /bin/bash -c "pip install pre-commit && cd /repo && pre-commit run --all-files" && git status
